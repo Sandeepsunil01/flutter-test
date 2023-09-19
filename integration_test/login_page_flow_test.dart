@@ -1,71 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:flutter_testing/login_screen.dart';
+import 'package:integration_test/integration_test.dart';
 
-// This is a Widget Testing
 void main() {
-  group("Login Screen Test Cases", () {
-    testWidgets("Should have a title", (widgetTester) async {
-      // Arrange
-      await widgetTester.pumpWidget(
-        const MaterialApp(
-          home: LoginScreen(),
-        ),
-      );
-
-      // Act
-      Finder title = find.byKey(const ValueKey("app_bar_key"));
-
-      // Assert
-      expect(title, findsOneWidget);
-    });
-
-    testWidgets("Should have one text field form to collect user emailId",
-        (widgetTester) async {
-      // Arrange
-      await widgetTester.pumpWidget(
-        const MaterialApp(
-          home: LoginScreen(),
-        ),
-      );
-
-      // Act
-      Finder userNameTextField = find.byKey(const ValueKey("email_id"));
-
-      // Assert
-      expect(userNameTextField, findsOneWidget);
-    });
-
-    testWidgets("Shoule have one test field form to collect user password",
-        (widgetTester) async {
-      // Arrange
-      await widgetTester.pumpWidget(
-        const MaterialApp(
-          home: LoginScreen(),
-        ),
-      );
-
-      // Act
-      Finder passwordTextField = find.byKey(const ValueKey("password"));
-
-      // Assert
-      expect(passwordTextField, findsOneWidget);
-    });
-
-    testWidgets("Should have an Login Button", (widgetTester) async {
-      // Arrange
-      await widgetTester.pumpWidget(
-        const MaterialApp(
-          home: LoginScreen(),
-        ),
-      );
-
-      // Act
-      Finder loginButton = find.byType(ElevatedButton);
-
-      // Assert
-      expect(loginButton, findsOneWidget);
-    });
+  group("This Tests Login Screen Flow", () {
+    IntegrationTestWidgetsFlutterBinding.ensureInitialized();
 
     testWidgets(
         "Should Show required field error message if user email id & password is empty",
@@ -80,7 +20,7 @@ void main() {
       // Act
       Finder loginButton = find.byType(ElevatedButton);
       await widgetTester.tap(loginButton);
-      await widgetTester.pumpAndSettle();
+      await widgetTester.pumpAndSettle(const Duration(seconds: 5));
       Finder errorText = find.text("Required Field");
 
       // Assert
@@ -104,7 +44,7 @@ void main() {
 
       Finder loginButton = find.byType(ElevatedButton);
       await widgetTester.tap(loginButton);
-      await widgetTester.pumpAndSettle();
+      await widgetTester.pumpAndSettle(const Duration(seconds: 5));
       Finder emailError = find.text("Please enter valid Email Id");
       Finder passwordError = find.text("Password is short");
 
@@ -113,7 +53,7 @@ void main() {
       expect(passwordError, findsOneWidget);
     });
 
-    testWidgets("Should submit form when user email id and password is valid",
+    testWidgets("Shoudld show home screen when user Logs In",
         (widgetTester) async {
       // Arrange
       await widgetTester.pumpWidget(
@@ -131,10 +71,12 @@ void main() {
 
       Finder loginButton = find.byType(ElevatedButton);
       await widgetTester.tap(loginButton);
-      await widgetTester.pumpAndSettle();
-      Finder errorMessage = find.text("Required Field");
+      await widgetTester.pumpAndSettle(const Duration(seconds: 5));
 
-      expect(errorMessage, findsNothing);
+      Finder homeScreenText = find.textContaining("Welcome !!!");
+
+      // Assert
+      expect(homeScreenText, findsOneWidget);
     });
   });
 }
